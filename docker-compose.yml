@@ -1,6 +1,8 @@
 version: "3"
 
 services:
+
+
   mariadb:
     image: 'mariadb'
     container_name: 'mariadb'
@@ -31,3 +33,13 @@ services:
       MYSQL_PASSWORD: ${MARIADB_PASSWORD}
     ports:
       - '${PHPMYADMIN_PORT}:80'
+
+  nodejs:
+    build: .
+    container_name: 'nodejs'
+    ports:
+      - "${NODE_PORT}:3000"
+    depends_on:
+      - mariadb
+    volumes:
+      - ${NODE_FILE}:/app
