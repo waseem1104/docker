@@ -5,6 +5,7 @@ services:
     container_name: nodejs
     ports:
       - '3000:3000'
+
   mariadb:
     image: mariadb
     container_name: mariadb
@@ -18,6 +19,7 @@ services:
       MYSQL_DATABASE: '${MARIADB_DATABASE}'
       MYSQL_USER: '${MARIADB_USER}'
       MYSQL_PASSWORD: '${MARIADB_PASSWORD}'
+
   phpmyadmin:
     image: phpmyadmin
     container_name: phpmyadmin
@@ -70,6 +72,7 @@ services:
       - elasticnetwork
     depends_on:
       - elasticsearch
+
   logstash:
     image: 'logstash:7.13.3'
     container_name: logstash
