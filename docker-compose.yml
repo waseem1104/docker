@@ -7,6 +7,8 @@ services:
       - '${NODE_PORT}:3000'
     volumes:
       - ${NODE_FILE}:/home/node/app
+    networks:
+      - elasticnetwork
 
   mariadb:
     image: mariadb
@@ -21,6 +23,8 @@ services:
       MYSQL_DATABASE: '${MARIADB_DATABASE}'
       MYSQL_USER: '${MARIADB_USER}'
       MYSQL_PASSWORD: '${MARIADB_PASSWORD}'
+    networks:
+      - elasticnetwork
 
   phpmyadmin:
     image: phpmyadmin
@@ -37,6 +41,9 @@ services:
       MYSQL_PASSWORD: '${MARIADB_PASSWORD}'
     ports:
       - '${PHPMYADMIN_PORT}:80'
+    networks:
+      - elasticnetwork
+
   redis:
     container_name: redis
     image: redis
@@ -87,6 +94,18 @@ services:
     depends_on:
       - elasticsearch
       - redis
+
+  postfixadmin:
+    image: postfixadmin
+    container_name: postfixadmin
+    environment:
+      - MAIL_HOSTNAME=${POSTFIX_HOST}
+    ports:
+      - "25:25"
+      - "143:143"
+      - "110:110"
+    networks:
+      - elasticnetwork
 
 networks:
   elasticnetwork:
