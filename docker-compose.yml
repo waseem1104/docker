@@ -4,7 +4,7 @@ services:
     build: ./front
     container_name: 'vuejs'
     ports:
-      - '8094:8094'
+      - '8094:8080'
     volumes:
       - ./front:/usr/src/app/my-app
       - /usr/src/app/my-app/node_modules
@@ -108,11 +108,19 @@ services:
     image: postfixadmin
     container_name: postfixadmin
     environment:
-      - MAIL_HOSTNAME=${POSTFIX_HOST}
+      POSTFIXADMIN_DB_TYPE: mysqli
+      POSTFIXADMIN_DB_HOST: mariadb
+      POSTFIXADMIN_DB_USER: '${MARIADB_USER}'
+      POSTFIXADMIN_DB_NAME: '${MARIADB_DATABASE}'
+      POSTFIXADMIN_DB_PASSWORD: '${MARIADB_PASSWORD}'
+      POSTFIXADMIN_SETUP_PASSWORD: 'Waseem66'
     ports:
       - "25:25"
       - "143:143"
       - "110:110"
+      - "${POSTFIX_PORT}:80"
+    depends_on:
+      - mariadb
     networks:
       - elasticnetwork
 
