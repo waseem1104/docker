@@ -10,14 +10,13 @@ services:
       - /usr/src/app/my-app/node_modules
 
   nodejs:
-    build: ${NODE_FILE}
+    build: ./back
     container_name: 'nodejs'
     ports:
       - '${NODE_PORT}:3000'
     volumes:
-      - ${NODE_FILE}:/home/node/app
-    networks:
-      - elasticnetwork
+      - ./back:/usr/src/app/api
+      - /usr/src/app/api/node_modules
 
   mariadb:
     image: mariadb
