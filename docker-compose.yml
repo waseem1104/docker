@@ -1,25 +1,37 @@
 version: '3'
 services:
-  vuejs:
-    build: ./front
-    container_name: 'vuejs'
+  client:
+    container_name: client
+    build: ./client
     ports:
-      - '8094:8080'
+      - 8080:8080
     volumes:
-      - ./front:/usr/src/app/my-app
-      - /usr/src/app/my-app/node_modules
+      - ./client:/data
+    environment:
+      - API_URL=http://localhost:8081/
 
-  nodejs:
-    build: ./back
-    container_name: 'nodejs'
+  server:
+    container_name: server
+    build: ./server
     ports:
-      - '${NODE_PORT}:3000'
+      - 8081:8081
     volumes:
-      - ./back:/usr/src/app/api
-      - /usr/src/app/api/node_modules
+      - ./server:/data
+    depends_on:
+      - server-database
+    environment:
+      - DATABASE_URL=server-database:27017
+
+  server-database:
+    container_name: server-database
+    image: mongo
+    ports:
+      - 27017:27017
+    volumes:
+      - ./db:/data/db
 
   mariadb:
-    image: mariadb
+    image: mysql
     container_name: mariadb
     restart: always
     ports:
@@ -38,7 +50,7 @@ services:
     image: phpmyadmin
     container_name: phpmyadmin
     depends_on:
-      - mariadb
+      - server-database
     environment:
       PMA_HOST: mariadb
       PMA_PORT: 3306
